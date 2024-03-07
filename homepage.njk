@@ -1,0 +1,9 @@
+---
+permalink: "/index.html"
+layout: index.njk
+---
+{% for production in productions %}
+  <a href="/productions/{{ production.slug.current }}">
+    <h2>{{production.company.name}} - {{production.show.title}}</h2>
+  </a>
+{% endfor %}

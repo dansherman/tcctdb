@@ -1,0 +1,59 @@
+---
+pagination:
+    data: people
+    size: 1
+    alias: person
+permalink: "/people/{{ person.slug }}/"
+layout: index.njk
+---
+
+<article>
+  <section id="name">
+    <h2>{{ person.nameFirst }}
+      {{ person.nameLast }}</h2>
+  </section>
+  <section id="headshot">
+    <picture width="300" height="300">
+      <source srcset="{{ person.headshot.src_sm }}" media="(min-width: 600px)"/>
+      <img src="http://placekitten.com/300/300" />
+    </picture>
+  </section>
+  {% if person.roles|length > 0 %}
+    <section id="cast">
+      <h3>Cast</h3>
+      <dl>
+        {% for slug, values in person.roles %}
+          <dt>
+            <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
+          </dt>
+          <dd>
+            <ul>
+              {% for role in values.roles %}
+                <li>{{ role }}</li>
+              {% endfor %}
+            </ul>
+          </dd>
+        {% endfor %}
+      </dl>
+    </section>
+  {% endif %}
+  {% if person.assignments|length > 0 %}
+    <section id="crew">
+      <h3>Crew</h3>
+      <dl>
+        {% for slug, values in person.assignments %}
+          <dt>
+            <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
+          </dt>
+          <dd>
+            <ul>
+              {% for assignment in values.assignments %}
+                <li>{{ assignment.jobName }}</li>
+              {% endfor %}
+            </ul>
+          </dd>
+        {% endfor %}
+      </dl>
+    </section>
+  {% endif %}
+</article>

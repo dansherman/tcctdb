@@ -1,0 +1,88 @@
+---
+layout: index.njk
+pagination:
+  data: productions
+  size: 1
+  alias: production
+permalink: "/productions/{{ production.slug.current }}/"
+eleventyComputed:
+  title: "{{production.show.title}} - {{production.company.name}}"
+---
+<header>
+  <hgroup>
+    <h1>{{ production.show.title }}</h1>
+    <h2>{{ production.company.name }}</h2>
+  </hgroup>
+  <nav>
+    <ul>
+      <li><a href="#description">Description</a></li>
+      <li><a href="#cast">Cast</a></li>
+      <li><a href="#crew">Crew</a></li>
+      <li><a href="#pictures">Pictures</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabIndex="-1">
+  <article>
+    <section id="headshot">
+    <picture width="400" height="600">
+      <source srcset="{{ production.postersrc.src_tl }}" media="(min-width: 600px)"/>
+      <img src="http://placekitten.com/400/600" />
+    </picture>
+  </section>
+    <section id="description">
+      <h2>Description</h2>
+      {{ production.description | sanityToHTML | safe }}
+    </section>
+
+    <section id="cast">
+      <h2>Cast</h2>
+      <dl>
+        {% for character in production.cast %}
+          <dt>
+            {{ character.characterName }}
+          </dt>
+          <dd>
+            {% for cast in character.castMembers %}
+              <li>
+                <a href="/people/{{cast.castMember.slug.current}}">{{ cast.castMember.name }}</a>
+              </li>
+            {% endfor %}
+          </dd>
+        {% endfor %}
+      </dl>
+    </section>
+    <section id="crew">
+      <h2>Crew</h2>
+      <dl>
+        {% for assignment in production.crew %}
+          {% if assignment.crewMembers.length > 0 %}
+            <dt>
+              {{ assignment.jobName }}
+            </dt>
+            <dd>
+              <ul>
+              {% for crewMember in assignment.crewMembers %}
+              <li>
+                  <a href="/people/{{crewMember.crewMember.slug.current}}">{{ crewMember.crewMember.name }}</a>
+              </li>
+              {% endfor %}
+              </ul>
+            </dd>
+          {% endif %}
+        {% endfor %}
+      </dl>
+    </section>
+    <section id="photos">
+
+    <h2>Photos</h2>
+      {% for photo in production.photosrc %}
+        <figure>
+          <img src="{{photo.src_sm}}" />
+        </figure>
+      {% else %}
+        <p>No photos found...</p>
+      {% endfor %}
+    </section>
+  </article>
+</main>
