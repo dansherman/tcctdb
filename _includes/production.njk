@@ -1,0 +1,18 @@
+---
+layout: index.njk
+---
+<header>
+  <hgroup>
+    <h1>{{ production.show.title }}</h1>
+    <h2>{{ production.company.name }}</h2>
+  </hgroup>
+  <nav>
+    <ul role='list'>
+      <li><a href=".">Description</a></li>
+      <li><a href="cast">Cast</a></li>
+      <li><a href="crew">Crew</a></li>
+      <li><a href="pictures">Pictures</a></li>
+    </ul>
+  </nav>
+</header>
+{{ content | safe }}

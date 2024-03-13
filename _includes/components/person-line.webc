@@ -1,0 +1,4 @@
+<div>
+<img @attributes />
+<a class="person" @attributes><slot></slot></a>
+</div>

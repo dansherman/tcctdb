@@ -1,0 +1,22 @@
+---
+layout: production.njk
+pagination:
+  data: productions
+  size: 1
+  alias: production
+permalink: "/productions/{{ production.slug.current }}/index.html"
+eleventyComputed:
+  title: "{{production.show.title}} - {{production.company.name}}"
+---
+  <article>
+    <section id="poster">
+    <picture>
+      <source srcset="{% imageSrc production.poster, "md"%} " media="(min-width: 512px)"/>
+      <img src="http://placekitten.com/512" />
+    </picture>
+  </section>
+    <section id="description">
+      <h2>Description</h2>
+      {{ production.description | sanityToHTML | safe }}
+    </section>
+  </article>

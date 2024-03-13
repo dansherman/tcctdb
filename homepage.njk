@@ -2,8 +2,24 @@
 permalink: "/index.html"
 layout: index.njk
 ---
-{% for production in productions %}
-  <a href="/productions/{{ production.slug.current }}">
-    <h2>{{production.company.name}} - {{production.show.title}}</h2>
-  </a>
-{% endfor %}
+
+<article id="homepage">
+  <dl>
+    {% for production in productions %}
+      <div class="productionLineItem">
+        {% if production.poster %}
+          <a href="/productions/{{ production.slug.current }}"><img src="{% imageSrc production.poster, "xs", true %}"/></a>
+        {% else %}
+          {% svgShow %}
+        {% endif %}
+        <div>
+          <dt>
+            <a href="/productions/{{ production.slug.current }}">{{ production.show.title }}
+              ({{ production.year }})</a>
+          </dt>
+          <dd>{{ production.company.name }}</dd>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</dl></article>

@@ -1,0 +1,44 @@
+---
+layout: production.njk
+pagination:
+  data: productions
+  size: 1
+  alias: production
+permalink: "/productions/{{ production.slug.current }}/crew"
+eleventyComputed:
+  title: "Crew - {{production.show.title}} - {{production.company.name}}"
+---
+
+<article>
+  <h2>Crew</h2>
+  <dl>
+    {% for assignment in production.crew %}
+      {% if assignment.crewMembers.length > 0 %}
+        <dt>
+          {{ assignment.jobName }}
+        </dt>
+        <dd>
+          <ul>
+            {% for crewMember in assignment.crewMembers %}
+            {% set cm = crewMember.crewMember %}
+              <li class="personLineItem">
+                <a class="person" href="/people/{{ cm.slug.current }}">
+                  <figure>
+                    {% if cm.headshot %}
+                      <img src="{% imageSrc cm.headshot, "xs", true %}" />
+                    {% else %}
+                      {% svgUser %}
+                    {% endif %}
+                    <figcaption id="caption-{{ photo._id }}">
+                      {{ cm.name }}
+                    </figcaption>
+                  </figure>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </dd>
+      {% endif %}
+    {% endfor %}
+  </dl>
+</article>

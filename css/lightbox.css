@@ -1,0 +1,45 @@
+body:has(dialog:target) {
+  /* Prevent page scrolling when lightbox open (for browsers that support :has()) */
+  position: fixed;
+}
+
+a[href^='#lightbox-'] {
+  /* Show 'zoom in' cursor over lightboxed images. */
+  cursor: zoom-in;
+}
+
+.lightbox {
+  /* Lightboxes are hidden by-default, but occupy the full screen and top z-index layer when shown. */
+  all: unset;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: #333;
+}
+
+.lightbox:target {
+  /* If the target of the URL points to the lightbox, it becomes visible. */
+  display: flex;
+  justify-content: center;
+}
+
+.lightbox img {
+  /* Images fill the lightbox. */
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+}
+
+.close svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #888;
+  background-color: #eee;
+  border-radius: 50%;
+  outline: 1px solid var(--clr-brand-300);
+  outline-offset: -1px;
+}

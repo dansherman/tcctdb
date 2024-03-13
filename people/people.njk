@@ -13,10 +13,11 @@ layout: index.njk
       {{ person.nameLast }}</h2>
   </section>
   <section id="headshot">
-    <picture width="300" height="300">
-      <source srcset="{{ person.headshot.src_sm }}" media="(min-width: 600px)"/>
-      <img src="http://placekitten.com/300/300" />
-    </picture>
+    {% if person.headshot %}
+      <img src="{% imageSrc person.headshot, "md", true %}" />
+    {% else %}
+    {% svgUser %}
+    {% endif %}
   </section>
   {% if person.roles|length > 0 %}
     <section id="cast">
@@ -56,4 +57,5 @@ layout: index.njk
       </dl>
     </section>
   {% endif %}
+  
 </article>

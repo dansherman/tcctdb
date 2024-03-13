@@ -7,7 +7,7 @@ module.exports = async function () {
 		'title':nameFirst + " " + nameLast,
     nameLast,
     nameFirst,
-    'photo':headshot,
+    headshot,
     'raw_assignments': *[ _type == 'assignment' && references(^._id)]|order(production.performanceDates[0].dateAndTime asc){
 			'jobName':job->jobName,
 			production->{
@@ -44,11 +44,6 @@ module.exports = async function () {
 		}
 		person.roles = roles
 		person.assignments = assignments
-    if (person.photo) {
-      person.headshot = generateImageData(person)
-    } else {
-      person.headshot = {src_sm:"",src_lg:""}
-    }
 	}
   return people;
 }

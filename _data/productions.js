@@ -8,7 +8,18 @@ module.exports = async function () {
     description,
     slug,
     poster,
-    'photos':*[_type=='photo' && references(^._id)]{'_id':_id,caption,photo,'metadata':photo.asset->metadata,"attribution":attribution->name,roles[]->{"characterName":character->characterName, castMember{"name":person->nameFirst + " " + person->nameLast, "slug":person->slug}}},
+    'photos':*[_type=='photo' && references(^._id)]{
+      _id,
+      caption,
+      photo,
+      'metadata':photo.asset->metadata,
+      "attribution":attribution->name,
+      roles[]->{
+        "characterName":character->characterName, 
+        castMember{"name":person->nameFirst + " " + person->nameLast, "slug":person->slug
+        }
+      }
+    },
     show->,
     company->{name,logo, slug},
     'year':performanceDates[0].dateAndTime,
@@ -50,14 +61,7 @@ module.exports = async function () {
         } else {
             p.year = "—";
         }
-        p.photosrc = p.photos.map(generateImageData);
-        if (p.poster) {
-            p.postersrc = generateImageData({photo:p.poster});
-        } else {
-            p.postersrc = { src_sm: "", src_lg: "" };
-        }
         return p;
     });
-
     return productions;
 };

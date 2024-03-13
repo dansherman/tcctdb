@@ -6,16 +6,22 @@
     <link rel="stylesheet" href="/bundle.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="preload"
+      as="style"
+      href="$CSS&display=swap" />
+
+    <link rel="stylesheet"
+      href="$CSS&display=swap"
+      media="print" onload="this.media='all'" />
     <title>{{ title }}</title>
   </head>
   <body>
     <header>
       <a href="/">TCCTDB</a>
       </header>
-    <main>
+      <main>
       {{ content | safe }}
-    </main>
+      </main>
     <footer>
       A project of
       <a href="https://4communitytheatre.org">4 Community Theatre</a>
@@ -23,5 +29,6 @@
       <a href="https://sanity.io">Sanity.io</a>.
       <!--Source at: https://github.com/dansherman/tcctdb-->
     </footer>
+    <script src="/bundle.js"></script>
   </body>
 </html>

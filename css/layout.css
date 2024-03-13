@@ -2,13 +2,92 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto; /* => header main footer */
-  font-size: clamp(0.5rem, 4cqi, 2rem);
+  font-size: clamp(1rem, 2cqi, 4rem);
   font-family: "Inter", system-ui, sans-serif;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 header, footer, main {
   justify-self: center;
-  max-width: 80ch;
+  max-width: 120rch;
+  min-width: 120rch
+}
+header>nav>ul {
+  display: flex;
+  justify-content: flex-start;
+}
+header>nav>ul>li {
+  padding-inline:0.75rem;
+  margin-inline:0.5rem;
+  outline: 0.25cqi solid black;
+  outline-offset: -0.25cqi;
+  color: black;
+}
+header>nav>ul>li:first-child {
+  margin-inline-start:0
+}
+header>nav>ul>li:last-child {
+  margin-inline-end:0;
 }
 footer {
-  font-size: 1rem
+  font-size: 0.75rem;
+  margin-top: 3rem
+}
+dt {
+  margin-top:1.5rem;
+}
+dd>ul>li {
+  list-style-type: none;
+}
+dd>ul>li:not(:first-child) {
+  margin-top:1rem;
+}
+
+a.person {color:orangered;}
+
+.personLineItem figure{
+  display: flex;
+  align-items: center;
+  justify-items: flex-start;
+  gap:2rem
+}
+.personLineItem svg, #headshot svg, #homepage svg {
+  min-width: 96px;
+  color: #888;
+  background-color: #eee;
+  padding: .75rem
+}
+.personLineItem svg, .personLineItem img, #headshot img, #headshot svg, #homepage svg {
+  border-radius: 0.5rem;
+  outline: 1px solid var(--clr-brand-300);
+  outline-offset: -1px;
+}
+section:not(#headshot) {
+  margin-top: 6rem;
+}
+section#name {
+  margin-bottom: 2rem;
+}
+.productionLineItem {
+  margin-top: 2rem
+}
+
+#cast dt, #crew dt, #homepage dt{
+  font-weight: 600;
+  margin-right: 2rem;
+}
+
+#cast dd, #crew dd, #homepage dd {
+  font-weight: 400;
+  font-size: 80%
+}
+.productionLineItem {
+  display: flex;
+  align-items: center;
+  justify-items: flex-start;
+  gap: 2rem;
+}
+
+figure.productionPhoto:not(:first-of-type) {
+  margin-top: 4rem
 }

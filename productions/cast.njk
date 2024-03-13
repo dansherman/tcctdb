@@ -1,0 +1,44 @@
+---
+layout: production.njk
+pagination:
+  data: productions
+  size: 1
+  alias: production
+permalink: "/productions/{{ production.slug.current }}/cast"
+eleventyComputed:
+  title: "Cast - {{production.show.title}} - {{production.company.name}}"
+---
+
+<article>
+  <h2>Cast</h2>
+  <dl>
+    {% for character in production.cast %}
+      <dt>
+        {{ character.characterName }}
+      </dt>
+      <dd>
+        <ul>
+          {% for cast in character.castMembers %}
+            {% set cm = cast.castMember %}
+            <li class="personLineItem">
+              <a class="person" href="/people/{{ cm.slug.current }}">
+                <figure>
+                    {% if cast.characterPhotos %}
+                      <img src="{% imageSrc cast.characterPhotos[0].photo, "xs", true %}" />
+                    {% elif cm.headshot %}
+                      <img src="{% imageSrc cm.headshot, "xs", true %}" />
+                    {% else %}
+                      {% svgUser %}
+                    {% endif %}
+                  <figcaption id="caption-{{ cm._id }}">
+                    {{ cm.name }}
+                  </figcaption>
+                </figure>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </dd>
+    {% endfor %}
+  </dl>
+</article>

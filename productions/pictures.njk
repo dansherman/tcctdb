@@ -1,0 +1,33 @@
+---
+layout: production.njk
+pagination:
+  data: productions
+  size: 1
+  alias: production
+permalink: "/productions/{{ production.slug.current }}/pictures"
+eleventyComputed:
+  title: "Photos - {{production.show.title}} - {{production.company.name}}"
+---
+
+<article id="photos">
+  <h2>Photos</h2>
+  {% for photo in production.photos %}
+    <figure class="productionPhoto" id="photo-{{ photo._id }}" aria-describedby="caption-{{ photo._id }}">
+      <a href="#lightbox-{{ photo._id }}" role="button">
+        <img src="{% imageSrc photo.photo, "md" %}" alt="{{ photo.caption }}"/>
+      </a>
+      <figcaption id="caption-{{ photo._id }}">
+        {{ photo.caption }}
+      </figcaption>
+    </figure>
+  {% else %}
+    <p>No photos found...</p>
+  {% endfor %}
+</article>
+{% for photo in production.photos %}
+  <dialog id="lightbox-{{ photo._id }}" class="lightbox">
+    <a href="{{ photo.src._id }}">
+      <img src="{% imageSrc photo.photo, "lg" %}" loading="lazy" alt="{{ photo.caption }}"></a>
+      <a class="close" href="#{{ photo._id }}" title="Close image" role="button">{% svgClose %}</a>
+    </dialog>
+  {% endfor %}
