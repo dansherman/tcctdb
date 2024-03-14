@@ -22,7 +22,8 @@ module.exports = async function () {
 				'title':show->title,
 				'company':company->name,
 				poster,
-				slug}
+				slug},
+				castMember
 			},
   }`;
   let people = await client.fetch(query);
@@ -40,7 +41,7 @@ module.exports = async function () {
 			if (!roles.hasOwnProperty(role.production.slug.current)) {
 				roles[role.production.slug.current] = {production: role.production, roles:[]}
 			}
-			roles[role.production.slug.current].roles.push(role.characterName)
+			roles[role.production.slug.current].roles.push(role)
 		}
 		person.roles = roles
 		person.assignments = assignments

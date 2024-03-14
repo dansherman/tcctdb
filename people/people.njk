@@ -14,9 +14,9 @@ layout: index.njk
   </section>
   <section id="headshot">
     {% if person.headshot %}
-      <img src="{% imageSrc person.headshot, "md", true %}" />
+      <img src="{% imageSrc person.headshot, "md", true %}"/>
     {% else %}
-    {% svgUser %}
+      {% svgUser %}
     {% endif %}
   </section>
   {% if person.roles|length > 0 %}
@@ -24,38 +24,56 @@ layout: index.njk
       <h3>Cast</h3>
       <dl>
         {% for slug, values in person.roles %}
-          <dt>
+          <dt class="production" >
             <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
           </dt>
           <dd>
             <ul>
               {% for role in values.roles %}
-                <li>{{ role }}</li>
-              {% endfor %}
-            </ul>
-          </dd>
-        {% endfor %}
-      </dl>
-    </section>
-  {% endif %}
-  {% if person.assignments|length > 0 %}
-    <section id="crew">
-      <h3>Crew</h3>
-      <dl>
-        {% for slug, values in person.assignments %}
-          <dt>
-            <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
-          </dt>
-          <dd>
-            <ul>
-              {% for assignment in values.assignments %}
-                <li>{{ assignment.jobName }}</li>
-              {% endfor %}
-            </ul>
-          </dd>
-        {% endfor %}
-      </dl>
-    </section>
-  {% endif %}
-  
-</article>
+                <li class="personLineItem">
+                  <figure>
+                    {% if role.castMember.characterPhotos %}
+                    {% set photo = role.castMember.characterPhotos[0].photo %}
+                      <a href="#lightbox-{{ role.characterName }}-{{loop.index}}" role="button">
+                        <img src="{% imageSrc photo, "xs", true %}"/>
+                      </a>
+                      <dialog id="lightbox-{{ role.characterName }}-{{loop.index}}" class="lightbox">
+                        <a href="{{ photo.src }}">
+                          <img src="{% imageSrc photo, "lg" %}" loading="lazy" alt="{{ photo.caption }}"></a>
+                          <a class="close" href="#{{ role.characterName }}-{{loop.index}}" title="Close image" role="button">{% svgClose %}</a>
+                        </dialog>
+                      {% else %}
+                        {% svgUser %}
+                      {% endif %}
+                      <figcaption>
+                        {{ role.characterName }}
+                      </figcaption>
+                    </figure>
+                  </li>
+                {% endfor %}
+              </ul>
+            </dd>
+          {% endfor %}
+        </dl>
+      </section>
+    {% endif %}
+    {% if person.assignments|length > 0 %}
+      <section id="crew">
+        <h3>Crew</h3>
+        <dl>
+          {% for slug, values in person.assignments %}
+            <dt class="production" >
+              <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
+            </dt>
+            <dd>
+              <ul>
+                {% for assignment in values.assignments %}
+                  <li>{{ assignment.jobName }}</li>
+                {% endfor %}
+              </ul>
+            </dd>
+          {% endfor %}
+        </dl>
+      </section>
+    {% endif %}
+  </article>

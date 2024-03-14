@@ -9,8 +9,8 @@ body {
 }
 header, footer, main {
   justify-self: center;
-  max-width: 120rch;
-  min-width: 120rch
+  min-width: 95%;
+  max-width: 120rch
 }
 header>nav>ul {
   display: flex;
@@ -33,9 +33,6 @@ footer {
   font-size: 0.75rem;
   margin-top: 3rem
 }
-dt {
-  margin-top:1.5rem;
-}
 dd>ul>li {
   list-style-type: none;
 }
@@ -57,10 +54,19 @@ a.person {color:orangered;}
   background-color: #eee;
   padding: .75rem
 }
-.personLineItem svg, .personLineItem img, #headshot img, #headshot svg, #homepage svg {
+#headshot svg {
+  min-width: 256px;
+  color: #888;
+  background-color: #eee;
+  padding: .75rem
+}
+.personLineItem svg, #headshot svg, #homepage svg {
   border-radius: 0.5rem;
   outline: 1px solid var(--clr-brand-300);
   outline-offset: -1px;
+}
+.personLineItem img {
+  border-radius: 0.5rem;
 }
 section:not(#headshot) {
   margin-top: 6rem;
@@ -71,19 +77,30 @@ section#name {
 .productionLineItem {
   margin-top: 2rem
 }
-
-#cast dt, #crew dt, #homepage dt{
-  font-weight: 600;
-  margin-right: 2rem;
+.productionLineItem div {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+}
+.production {
+  color: var(--clr-blue-800);
+  /* text-shadow:1px 1px 3px var(--clr-blue-300); */
 }
 
-#cast dd, #crew dd, #homepage dd {
+#cast dt, #crew dt {
+  font-weight: 600;
+  margin-right: 2rem;
+  margin-top: 1.5rem
+}
+
+#cast dd, #crew dd{
   font-weight: 400;
   font-size: 80%
 }
+
 .productionLineItem {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-items: flex-start;
   gap: 2rem;
 }

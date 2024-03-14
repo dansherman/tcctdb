@@ -36,6 +36,16 @@ eleventyComputed:
                 </figure>
               </a>
             </li>
+            {% else %}
+            <li class="personLineItem">
+            
+                <figure>
+                      {% svgUser %}
+                  <figcaption>
+                    —
+                  </figcaption>
+                </figure>
+            </li>
           {% endfor %}
         </ul>
       </dd>
