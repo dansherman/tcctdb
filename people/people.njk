@@ -20,12 +20,12 @@ layout: index.njk
     {% endif %}
   </section>
   {% if person.roles|length > 0 %}
-    <section id="cast">
+    <section>
       <h3>Cast</h3>
-      <dl>
+      <dl  id="cast">
         {% for slug, values in person.roles %}
-          <dt class="production" >
-            <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
+          <dt class="production">
+            <a class="productionLink" href="/productions/{{ slug }}">{{ values.production.title }}</a>
           </dt>
           <dd>
             <ul>
@@ -33,14 +33,19 @@ layout: index.njk
                 <li class="personLineItem">
                   <figure>
                     {% if role.castMember.characterPhotos %}
-                    {% set photo = role.castMember.characterPhotos[0].photo %}
-                      <a href="#lightbox-{{ role.characterName }}-{{loop.index}}" role="button">
+                      {% set photo = role.castMember.characterPhotos[0].photo %}
+                      <a href="#lightbox-{{ role.characterName }}-{{ loop.index }}" role="button">
                         <img src="{% imageSrc photo, "xs", true %}"/>
                       </a>
-                      <dialog id="lightbox-{{ role.characterName }}-{{loop.index}}" class="lightbox">
-                        <a href="{{ photo.src }}">
-                          <img src="{% imageSrc photo, "lg" %}" loading="lazy" alt="{{ photo.caption }}"></a>
-                          <a class="close" href="#{{ role.characterName }}-{{loop.index}}" title="Close image" role="button">{% svgClose %}</a>
+                      <dialog id="lightbox-{{ role.characterName }}-{{ loop.index }}" class="lightbox">
+                        <figure>
+                          <a href="{{ photo.src }}">
+                            <img src="{% imageSrc photo, "lg" %}" loading="lazy" alt="{{ photo.caption }}"></a>
+                            <figcaption>
+                              Photo by: {{ photo.attribution }}
+                            </figcaption>
+                          </figure>
+                            <a class="close" href="#{{ role.characterName }}-{{ loop.index }}" title="Close image" role="button">{% svgClose %}</a>
                         </dialog>
                       {% else %}
                         {% svgUser %}
@@ -58,11 +63,11 @@ layout: index.njk
       </section>
     {% endif %}
     {% if person.assignments|length > 0 %}
-      <section id="crew">
+      <section>
         <h3>Crew</h3>
-        <dl>
+        <dl  id="crew">
           {% for slug, values in person.assignments %}
-            <dt class="production" >
+            <dt class="production">
               <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
             </dt>
             <dd>

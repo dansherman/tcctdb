@@ -1,2 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
+
+a.personLink::before {
+  content: '👤';
+  margin-inline-end: 0.25rem;
+  
+}
+a.productionLink::before {
+  content: '🎭';
+  margin-inline-end: 0.25rem;
+  
+}
+a {
+  text-decoration: none;
+  color: currentColor;
+}
+a:hover {
+  outline: 1px currentColor dotted;
+  outline-offset: -1px;
+}

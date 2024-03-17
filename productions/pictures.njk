@@ -26,8 +26,21 @@ eleventyComputed:
 </article>
 {% for photo in production.photos %}
   <dialog id="lightbox-{{ photo._id }}" class="lightbox">
-    <a href="{{ photo.src._id }}">
-      <img src="{% imageSrc photo.photo, "lg" %}" loading="lazy" alt="{{ photo.caption }}"></a>
+    <figure>
+      <a href="{{ photo.src._id }}">
+      <img src="{% imageSrc photo.photo, "xl" %}" loading="lazy" alt="{{ photo.caption }}">
+      </a>
+
+      <figcaption>
+        {% if photo.roles %}<p>
+                      {% for role in photo.roles  %}
+                      {% if loop.index != 1 %} • {% endif %}
+                        <a class="personLink" href="/people/{{ role.castMember.slug.current }}">{{role.castMember.name}} as {{role.characterName}}</a>
+                      {% endfor %}
+                    </p>{% endif %}
+        <p>Photo by: {{ photo.attribution }}</p>
+        </figcaption>
+        </figure>
       <a class="close" href="#{{ photo._id }}" title="Close image" role="button">{% svgClose %}</a>
     </dialog>
   {% endfor %}

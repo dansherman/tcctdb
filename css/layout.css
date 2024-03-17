@@ -2,7 +2,7 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto; /* => header main footer */
-  font-size: clamp(1rem, 2cqi, 4rem);
+  font-size: 100%;
   font-family: "Inter", system-ui, sans-serif;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -10,7 +10,6 @@ body {
 header, footer, main {
   justify-self: center;
   min-width: 95%;
-  max-width: 120rch
 }
 header>nav>ul {
   display: flex;
@@ -19,9 +18,10 @@ header>nav>ul {
 header>nav>ul>li {
   padding-inline:0.75rem;
   margin-inline:0.5rem;
-  outline: 0.25cqi solid black;
-  outline-offset: -0.25cqi;
+  outline: 1px solid black;
+  outline-offset: -1px;
   color: black;
+  box-shadow: 2px 2px 0 black;
 }
 header>nav>ul>li:first-child {
   margin-inline-start:0
@@ -30,7 +30,7 @@ header>nav>ul>li:last-child {
   margin-inline-end:0;
 }
 footer {
-  font-size: 0.75rem;
+  font-size: 75%;
   margin-top: 3rem
 }
 dd>ul>li {
@@ -42,18 +42,7 @@ dd>ul>li:not(:first-child) {
 
 a.person {color:orangered;}
 
-.personLineItem figure{
-  display: flex;
-  align-items: center;
-  justify-items: flex-start;
-  gap:2rem
-}
-.personLineItem svg, #headshot svg, #homepage svg {
-  min-width: 96px;
-  color: #888;
-  background-color: #eee;
-  padding: .75rem
-}
+
 #headshot svg {
   min-width: 256px;
   color: #888;
@@ -61,12 +50,12 @@ a.person {color:orangered;}
   padding: .75rem
 }
 .personLineItem svg, #headshot svg, #homepage svg {
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
   outline: 1px solid var(--clr-brand-300);
   outline-offset: -1px;
 }
 .personLineItem img {
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
 }
 section:not(#headshot) {
   margin-top: 6rem;
@@ -86,18 +75,42 @@ section#name {
   color: var(--clr-blue-800);
   /* text-shadow:1px 1px 3px var(--clr-blue-300); */
 }
+dl#cast, dl#crew {
+  display:flex;
+  flex-direction: column;
+  max-width: 40rem;
+}
 
 #cast dt, #crew dt {
+  background-color: var(--clr-teal-200);
+  color: var(--clr-neutral-800);
   font-weight: 600;
-  margin-right: 2rem;
-  margin-top: 1.5rem
+  font-size: 120%;
+  margin-top: 1.5rem;
+  border-top: 1px black solid;
+  border-left: 1px black solid;
+  border-right: 1px black solid;
+  padding-inline-start: 1rem;
 }
 
 #cast dd, #crew dd{
   font-weight: 400;
-  font-size: 80%
+  border-bottom: 1px black solid;
+  border-left: 1px black solid;
+  border-right: 1px black solid;
 }
-
+.personLineItem figure{
+  display: flex;
+  align-items: center;
+  justify-items: flex-start;
+  gap:2rem
+}
+.personLineItem svg, #headshot svg, #homepage svg {
+  min-width: 96px;
+  color: #888;
+  background-color: #eee;
+  padding: .75rem
+}
 .productionLineItem {
   display: flex;
   align-items: start;
@@ -107,4 +120,8 @@ section#name {
 
 figure.productionPhoto:not(:first-of-type) {
   margin-top: 4rem
+}
+
+#poster svg {
+  width: 128px;
 }

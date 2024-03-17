@@ -11,7 +11,7 @@ eleventyComputed:
 
 <article>
   <h2>Cast</h2>
-  <dl>
+  <dl id="cast">
     {% for character in production.cast %}
       <dt>
         {{ character.characterName }}
@@ -21,8 +21,8 @@ eleventyComputed:
           {% for cast in character.castMembers %}
             {% set cm = cast.castMember %}
             <li class="personLineItem">
-              <a class="person" href="/people/{{ cm.slug.current }}">
                 <figure>
+              <a href="/people/{{ cm.slug.current }}">
                     {% if cast.characterPhotos %}
                       <img src="{% imageSrc cast.characterPhotos[0].photo, "xs", true %}" />
                     {% elif cm.headshot %}
@@ -30,11 +30,11 @@ eleventyComputed:
                     {% else %}
                       {% svgUser %}
                     {% endif %}
+              </a>
                   <figcaption id="caption-{{ cm._id }}">
-                    {{ cm.name }}
+                    <a class="personLink" href="/people/{{ cm.slug.current }}">{{ cm.name }}</a>
                   </figcaption>
                 </figure>
-              </a>
             </li>
             {% else %}
             <li class="personLineItem">
