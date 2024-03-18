@@ -39,20 +39,11 @@ dd>ul>li {
 dd>ul>li:not(:first-child) {
   margin-top:1rem;
 }
-
-a.person {color:orangered;}
-
-
 #headshot svg {
   min-width: 256px;
   color: #888;
   background-color: #eee;
   padding: .75rem
-}
-.personLineItem svg, #headshot svg, #homepage svg {
-  /* border-radius: 0.5rem; */
-  outline: 1px solid var(--clr-brand-300);
-  outline-offset: -1px;
 }
 .personLineItem img {
   /* border-radius: 0.5rem; */
@@ -92,9 +83,14 @@ dl#cast, dl#crew {
   border-right: 1px black solid;
   padding-inline-start: 1rem;
 }
-
-#cast dd, #crew dd{
+dd {
   font-weight: 400;
+}
+dt {
+  font-weight: 600;
+}
+#cast dd, #crew dd{
+
   border-bottom: 1px black solid;
   border-left: 1px black solid;
   border-right: 1px black solid;
@@ -105,11 +101,14 @@ dl#cast, dl#crew {
   justify-items: flex-start;
   gap:2rem
 }
-.personLineItem svg, #headshot svg, #homepage svg {
+.personLineItem img[src$=".svg"], #headshot img[src$=".svg"], #homepage img[src$=".svg"] {
   min-width: 96px;
   color: #888;
   background-color: #eee;
-  padding: .75rem
+  padding: .75rem;
+  outline: 1px solid var(--clr-brand-300);
+  outline-offset: -1px;
+
 }
 .productionLineItem {
   display: flex;
@@ -122,6 +121,7 @@ figure.productionPhoto:not(:first-of-type) {
   margin-top: 4rem
 }
 
-#poster svg {
+#poster img[src$=".svg"]{
   width: 128px;
+  background-color: #eed;
 }

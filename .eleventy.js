@@ -1,10 +1,14 @@
 const blocksToHtml = require("@sanity/block-content-to-html");
 const pluginWebc = require("@11ty/eleventy-plugin-webc");
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
-const { imgSizes } = require("./utils/sanity.js");
+const { imgSizes } = require("./src/_data/sanity.js");
 const sanityClient = require("@sanity/client");
 const projectId = "g8vgowfg";
 const imageUrl = require("@sanity/image-url");
+const path = require('path')
+
+const browserslist = require("browserslist");
+const { bundle, browserslistToTargets } = require("lightningcss");
 
 const client = sanityClient.createClient({
     projectId,
@@ -16,12 +20,14 @@ const client = sanityClient.createClient({
 module.exports = function (eleventyConfig) {
     eleventyConfig.addWatchTarget("./css/");
 
+    
     eleventyConfig.addPassthroughCopy("bundle.js");
-
+    
+    eleventyConfig.addPassthroughCopy("**/*.ttf");
+    eleventyConfig.addPassthroughCopy("**/*.svg");
+    
     eleventyConfig.addPlugin(EleventyRenderPlugin);
-    eleventyConfig.addPlugin(pluginWebc, {
-        components: "_includes/components/**/*.webc",
-    });
+
     eleventyConfig.addShortcode("svgClose", function () {
         return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
@@ -64,4 +70,37 @@ module.exports = function (eleventyConfig) {
             blocks: value,
         });
     });
+
+    eleventyConfig.addTemplateFormats('css')
+    eleventyConfig.addExtension("css", {
+        outputFileExtension: "css",
+        compile: async function (_inputContent, inputPath) {
+            let parsed = path.parse(inputPath);
+            if (parsed.name.startsWith("_")) {
+                return;
+            }
+
+            let targets = browserslistToTargets(
+                browserslist("> 0.2% and not dead"),
+            );
+
+            return async () => {
+                let { code, map } = await bundle({
+                    filename: inputPath,
+                    minify: true,
+                    sourceMap: false,
+                    targets,
+                    drafts: {
+                        nesting: true,
+                    },
+                });
+                return code;
+            };
+        },
+    });
+    return {
+        dir: {
+        input: "src",
+        output: "_site"
+      }}
 };

@@ -16,7 +16,7 @@ layout: index.njk
     {% if person.headshot %}
       <img src="{% imageSrc person.headshot, "md", true %}"/>
     {% else %}
-      {% svgUser %}
+      <img src="/static/ticket-outline.svg"/>
     {% endif %}
   </section>
   {% if person.roles|length > 0 %}
@@ -48,10 +48,10 @@ layout: index.njk
                             <a class="close" href="#{{ role.characterName }}-{{ loop.index }}" title="Close image" role="button">{% svgClose %}</a>
                         </dialog>
                       {% else %}
-                        {% svgUser %}
+                        <img src="/static/user-outline.svg"/>
                       {% endif %}
                       <figcaption>
-                        {{ role.characterName }}
+                        <span class="characterName">{{ role.characterName }}</span>
                       </figcaption>
                     </figure>
                   </li>

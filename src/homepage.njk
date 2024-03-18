@@ -7,11 +7,13 @@ layout: index.njk
   <dl>
     {% for production in productions %}
       <div class="productionLineItem">
+        <a href="/productions/{{ production.slug.current }}">
         {% if production.poster %}
-          <a href="/productions/{{ production.slug.current }}"><img src="{% imageSrc production.poster, "xs", true %}"/></a>
+          <img src="{% imageSrc production.poster, "xs", true %}"/>
         {% else %}
-          {% svgShow %}
+          <img src="/static/ticket-outline.svg"/>
         {% endif %}
+        </a>
         <div>
           <dt>
             <a class="productionLink" href="/productions/{{ production.slug.current }}">{{ production.show.title }}

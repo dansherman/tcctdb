@@ -1,5 +1,5 @@
 const groq = require('groq')
-const {client, generateImageData} = require("../utils/sanity.js");
+const {client, generateImageData} = require("./sanity.js");
 
 module.exports = async function () {
   const query = groq`*[_type == 'person' && (!excludePerson || !defined(excludePerson))]|order(nameFirst asc)|order(nameLast asc){

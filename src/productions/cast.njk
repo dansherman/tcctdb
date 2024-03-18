@@ -28,7 +28,7 @@ eleventyComputed:
                     {% elif cm.headshot %}
                       <img src="{% imageSrc cm.headshot, "xs", true %}" />
                     {% else %}
-                      {% svgUser %}
+                      <img src="/static/ticket-outline.svg"/>
                     {% endif %}
               </a>
                   <figcaption id="caption-{{ cm._id }}">
@@ -40,7 +40,7 @@ eleventyComputed:
             <li class="personLineItem">
             
                 <figure>
-                      {% svgUser %}
+                      <img src="/static/ticket-outline.svg"/>
                   <figcaption>
                     —
                   </figcaption>

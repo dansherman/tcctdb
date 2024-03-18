@@ -1,5 +1,5 @@
 const groq = require("groq");
-const {client} = require("../utils/sanity.js");
+const {client} = require("./sanity.js");
 
 
 async function getImages() {

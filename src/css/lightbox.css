@@ -28,9 +28,9 @@ a[href^='#lightbox-'] {
   margin-top: 0.5rem;
   margin-right: 0.5rem;
   margin-left: 0.5rem;
+  color: white;
 }
 .lightbox figcaption {
-  color: white;
   font-size: 1rem;
   position: fixed;
   bottom: 5px;

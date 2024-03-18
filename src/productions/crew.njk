@@ -27,13 +27,13 @@ eleventyComputed:
                     {% if cm.headshot %}
                       <img src="{% imageSrc cm.headshot, "xs", true %}" />
                     {% else %}
-                      {% svgUser %}
+                      <img src="/static/ticket-outline.svg"/>
                     {% endif %}
+                </a>
                     <figcaption id="caption-{{ photo._id }}">
-                      {{ cm.name }}
+                      <a class="personLink" href="/people/{{ cm.slug.current }}">{{ cm.name }}</a>
                     </figcaption>
                   </figure>
-                </a>
               </li>
             {% endfor %}
           </ul>

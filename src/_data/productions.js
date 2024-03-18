@@ -1,6 +1,6 @@
 const {} = require("@sanity/client");
 const groq = require("groq");
-const { client, generateImageData } = require("../utils/sanity.js");
+const { client, generateImageData } = require("./sanity.js");
 
 module.exports = async function () {
     const query = groq`*[_type == 'production']|order(performanceDates[0].dateAndTime desc){
