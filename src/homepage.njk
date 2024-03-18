@@ -9,9 +9,9 @@ layout: index.njk
       <div class="productionLineItem">
         <a href="/productions/{{ production.slug.current }}">
         {% if production.poster %}
-          <img src="{% imageSrc production.poster, "xs", true %}"/>
+          <img src="{% imageSrc production.poster, "xs", true %}" height="96" width="96"/>
         {% else %}
-          <img src="/static/ticket-outline.svg"/>
+          <img src="/static/ticket-outline.svg" height="96" width="96"/>
         {% endif %}
         </a>
         <div>
