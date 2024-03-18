@@ -64,7 +64,9 @@ module.exports = function (eleventyConfig) {
             return value;
         },
     );
-
+    eleventyConfig.addFilter("year", function (value) {
+        return value.slice(0, 4)
+    })
     eleventyConfig.addFilter("sanityToHTML", function (value) {
         return blocksToHtml({
             blocks: value,

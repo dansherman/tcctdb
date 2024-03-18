@@ -28,12 +28,21 @@ a[href^='#lightbox-'] {
   margin-top: 0.5rem;
   margin-right: 0.5rem;
   margin-left: 0.5rem;
-  color: white;
 }
 .lightbox figcaption {
   font-size: 1rem;
   position: fixed;
-  bottom: 5px;
+  bottom: 0px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: var(--clr-teal-100);
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-top: 1px solid var(--clr-teal-700);
+  border-left: 1px solid var(--clr-teal-700);
+  border-right: 1px solid var(--clr-teal-700);
 }
 .lightbox:target {
   /* If the target of the URL points to the lightbox, it becomes visible. */
@@ -63,4 +72,7 @@ a[href^='#lightbox-'] {
 }
 .lightbox a:hover:not(.personLink) {
   outline: none;
+}
+.attribution {
+  text-align: center
 }

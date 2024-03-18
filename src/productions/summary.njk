@@ -11,7 +11,7 @@ eleventyComputed:
   <article>
     <section id="poster">
       {% if production.poster %}
-    <img src="{% imageSrc production.poster, "md"%}"/>
+    <img class="poster" src="{% imageSrc production.poster, "md"%}"/>
     {%else%}
     <img class="alternatePoster" src="/static/ticket-outline.svg"/>
     {%endif%}

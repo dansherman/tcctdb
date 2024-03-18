@@ -14,22 +14,22 @@ layout: index.njk
   </section>
   <section id="headshot">
     {% if person.headshot %}
-      <img src="{% imageSrc person.headshot, "md", true %}"/>
+      <img src="{% imageSrc person.headshot, "md", true %}" width="512" height="512"/>
     {% else %}
-      <img src="/static/ticket-outline.svg"/>
+      <img src="/static/user-outline.svg" width="512" height="512"/>
     {% endif %}
   </section>
   {% if person.roles|length > 0 %}
     <section>
       <h3>Cast</h3>
       <dl  id="cast">
-        {% for slug, values in person.roles %}
+        {% for p in person.roles | sort(true, false,'production.year') %}
           <dt class="production">
-            <a class="productionLink" href="/productions/{{ slug }}">{{ values.production.title }}</a>
+            <a class="productionLink" href="/productions/{{ slug }}">{{ p.production.title }} ({{ p.production.year }})</a>
           </dt>
           <dd>
             <ul>
-              {% for role in values.roles %}
+              {% for role in p.roles %}
                 <li class="personLineItem">
                   <figure>
                     {% if role.castMember.characterPhotos %}
@@ -51,7 +51,7 @@ layout: index.njk
                         <img src="/static/user-outline.svg"/>
                       {% endif %}
                       <figcaption>
-                        <span class="characterName">{{ role.characterName }}</span>
+                        <span >{{ role.characterName }}</span>
                       </figcaption>
                     </figure>
                   </li>
@@ -66,14 +66,14 @@ layout: index.njk
       <section>
         <h3>Crew</h3>
         <dl  id="crew">
-          {% for slug, values in person.assignments %}
+          {% for a in person.assignments %}
             <dt class="production">
-              <a href="/productions/{{ slug }}">{{ values.production.title }}</a>
+              <a href="/productions/{{ slug }}">{{ a.production.title }}  ({{ a.production.year }})</a>
             </dt>
             <dd>
               <ul>
-                {% for assignment in values.assignments %}
-                  <li>{{ assignment.jobName }}</li>
+                {% for assignment in a.assignments %}
+                  <li class="jobName">{{ assignment.jobName }}</li>
                 {% endfor %}
               </ul>
             </dd>
