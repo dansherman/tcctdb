@@ -7,19 +7,21 @@
     <title>{{ title }}</title>
   </head>
   <body>
-    <header>
-      <a href="/" id="siteLogo">TCCTDB</a>
+    <div id="container">
+      <header id="siteLogo">
+        <a href="/">TCCTDB</a>
       </header>
       <main>
-      {{ content | safe }}
+        {{ content | safe }}
       </main>
-    <footer>
-      A project of
-      <a href="https://4communitytheatre.org">4 Community Theatre</a>
-      with content hosting by
-      <a href="https://sanity.io">Sanity.io</a>.
-      <!--Source at: https://github.com/dansherman/tcctdb-->
-    </footer>
+      <footer>
+        A project of
+        <a href="https://4communitytheatre.org">4 Community Theatre</a>
+        with content hosting by
+        <a href="https://sanity.io">Sanity.io</a>.
+        <!--Source at: https://github.com/dansherman/tcctdb-->
+      </footer>
+    </div>
     <script src="/bundle.js"></script>
   </body>
 </html>

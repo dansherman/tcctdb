@@ -18,6 +18,9 @@ a.productionLink::before {
   margin-inline-end: 0.25rem;
   color: blue;
 }
+.productionLink {
+  font-size: 1.2em;
+}
 .characterName::before {
   content: url('/static/user-circle-micro.svg');
   margin-inline-end: 0.25rem;
@@ -30,10 +33,13 @@ a {
   color: currentColor;
 }
 #siteLogo {
-  font-size: 2rem;
+  /* background-color: var(--clr-teal-700); */
+  font-size: 3rem;
   font-weight: 800;
   color: white;
-  text-shadow: 0px 0px 5px var(--clr-teal-200);
-  -webkit-text-stroke: 1px navy;
-  text-stroke: 1px navy;  
+  /* text-shadow: 0px 0px 5px var(--clr-teal-200); */
+  -webkit-text-stroke: 1.5px navy;
+  text-shadow: 1px 1px 0 navy;
+  /* border-radius: 2em;
+  padding-inline: 3rem; */
 }

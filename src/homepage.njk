@@ -4,6 +4,7 @@ layout: index.njk
 ---
 
 <article id="homepage">
+  <p class="intro"><strong>Twin Cities Community Theater Database</strong>. Very much a work in progress. Send any questions or contributions to <a href="mailto:dan@4communitytheatre.org"><code>dan@4communitytheatre.org</code></a>.</p>
   <dl>
     {% for production in productions %}
       <div class="productionLineItem">
@@ -22,6 +23,5 @@ layout: index.njk
           <dd>{{ production.company.name }}</dd>
         </div>
       </div>
-    </div>
   {% endfor %}
 </dl></article>

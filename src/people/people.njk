@@ -25,7 +25,7 @@ layout: index.njk
       <dl  id="cast">
         {% for p in person.roles | sort(true, false,'production.year') %}
           <dt class="production">
-            <a class="productionLink" href="/productions/{{ slug }}">{{ p.production.title }} ({{ p.production.year }})</a>
+            <a class="productionLink" href="/productions/{{ p.production.slug.current }}">{{ p.production.title }} ({{ p.production.year }})</a>
           </dt>
           <dd>
             <ul>
@@ -68,7 +68,7 @@ layout: index.njk
         <dl  id="crew">
           {% for a in person.assignments %}
             <dt class="production">
-              <a href="/productions/{{ slug }}">{{ a.production.title }}  ({{ a.production.year }})</a>
+              <a href="/productions/{{ p.production.slug.current }}">{{ a.production.title }}  ({{ a.production.year }})</a>
             </dt>
             <dd>
               <ul>
