@@ -93,6 +93,7 @@ def build_site(productions, people, companies):
   rmtree('_site/people', ignore_errors=True)
   rmtree('_site/companies', ignore_errors=True)
   rmtree('_site/by', ignore_errors=True)
+  mkdir('_site')
   mkdir('_site/productions')
   mkdir('_site/people')
   mkdir('_site/companies')
