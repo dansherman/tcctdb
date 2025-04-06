@@ -1,0 +1,44 @@
+{% macro person_link(slug, people) -%}
+{% set person = people[slug] %}
+<a href="/people/{{slug}}" class="person_link">
+  <div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="13px">
+      <path
+        d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+    </svg>
+    <span>{{
+      person.nameFirst }} {{ person.nameLast }}</span>
+  </div>
+</a>
+
+{%- endmacro %}
+
+{% macro production_link(slug, productions) -%}
+{% set production = productions[slug] %}
+<a href="/productions/{{slug}}">
+  {{production.title}}</a>
+{%- endmacro %}
+
+{% macro company_link(slug, companies) -%}
+{% set company = companies[slug] %}
+<a href='/companies/{{slug}}' class="company_link">
+  <div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="13px">
+      <path
+        d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM1.49 15.326a.78.78 0 0 1-.358-.442 3 3 0 0 1 4.308-3.516 6.484 6.484 0 0 0-1.905 3.959c-.023.222-.014.442.025.654a4.97 4.97 0 0 1-2.07-.655ZM16.44 15.98a4.97 4.97 0 0 0 2.07-.654.78.78 0 0 0 .357-.442 3 3 0 0 0-4.308-3.517 6.484 6.484 0 0 1 1.907 3.96 2.32 2.32 0 0 1-.026.654ZM18 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM5.304 16.19a.844.844 0 0 1-.277-.71 5 5 0 0 1 9.947 0 .843.843 0 0 1-.277.71A6.975 6.975 0 0 1 10 18a6.974 6.974 0 0 1-4.696-1.81Z" />
+    </svg>
+    <span>{{ company.name }}</span>
+  </div>
+</a>
+{%- endmacro %}
+
+{% macro date_stamp(date) %}
+<div class="date_stamp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="13px">
+    <path fill-rule="evenodd"
+      d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+      clip-rule="evenodd" />
+  </svg>
+  {{ date.strftime('%B %d, %Y') }}
+</div>
+{%- endmacro %}

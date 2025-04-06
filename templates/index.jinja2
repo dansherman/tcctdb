@@ -1,0 +1,27 @@
+{% extends "layout.jinja2" %} 
+{% from 'poster.jinja2' import poster %} 
+{% from 'links.jinja2' import company_link, date_stamp %}
+
+{% block title %}Home{% endblock %} 
+{% block content %}
+    <h2 >A <del>somewhat complete</del> <ins>growing</ins> database of community theater in the twin cities.</h2>
+      <dl class="productions">
+      {% for production in productions %}
+      <div>
+        <dt><a href="/productions/{{production.slug}}">{{ production.title }}</a></dt>
+        <dd>
+        <span>{{ company_link(production.company_slug, companies) }}</span>
+        <span>{{ date_stamp(production.date)}}</span>
+        </dd>
+      </div>
+      {% endfor %}
+        </dl>
+    <div>Sort by: 
+      <a href="/by/title">Title</a> 
+      <a href="/by/company">Company</a> 
+      <a href="/by/date">Date</a>
+    </div>
+    <section class="about">
+    Contact <a href="mailto:dan@4communitytheatre.org">dan@4communitytheatre.org</a> if you have questions or updated data.
+    </section>
+{% endblock %}

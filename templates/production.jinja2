@@ -1,0 +1,55 @@
+{% extends "layout.jinja2" %}
+{% from 'links.jinja2' import person_link, company_link, date_stamp %}
+{% set cast = production.cast %}
+{% set crew = production.crew %}
+{% block title %}{{ production.title }} at {{ production.company }}{% endblock %}
+{% block content %}
+    <div id="production">
+      <h2 >{{ production.title }}
+      </h2>
+      <div >
+        {{ company_link(production.company_slug, companies) }}
+        {{ date_stamp(production.date)}}
+      </div>
+    </div>
+
+  <div id="cast">
+  <h3 >Cast</h3>
+    <dl class="roster">
+      {% for row in cast %}
+      {% set role = row[0]%}
+      {% set p_list = row[1] %}
+
+      <div >
+        <dt >{{role}}</dt>
+        <dd >
+          {% for p_slug in p_list %}
+          {{ person_link(p_slug, people) }}
+          <br />
+          {% endfor %}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+
+<div id="crew">
+  <h3 >Crew</h3>
+    <dl class="roster">
+      {% for row in crew %}
+      {% set job = row[0]%}
+      {% set p_list = row[1] %}
+
+      <div >
+        <dt >{{job}}</dt>
+        <dd >
+          {% for p_slug in p_list %}
+          {{ person_link(p_slug, people) }}
+          <br />
+          {% endfor %}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+{% endblock %}

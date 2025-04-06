@@ -1,0 +1,23 @@
+{% extends "layout.jinja2" %} 
+{% from 'links.jinja2' import company_link %}
+{% block title %}Companies{% endblock %} 
+{% block content %}
+<div >
+  <div >
+    <div >
+      <h2 >Companies
+      </h2>
+<div >
+    <dl >
+      {% for company in companies %}
+      {% if company[0] != None %}
+      <div >
+        <dt >{{ company_link(company, companies) }}</dt>
+        <dd >
+        </dd>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </dl>
+  </div> 
+{% endblock %}

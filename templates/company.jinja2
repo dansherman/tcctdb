@@ -1,0 +1,30 @@
+{% extends "layout.jinja2" %}
+  {% from 'links.jinja2' import production_link %}
+{% block title %}{{ company.name }}{% endblock %}
+{% block content %}
+
+<div >
+  <div >
+    <div >
+      <h2 >{{ company.name }}
+      </h2>   
+    </div>
+  </div>
+  {% if company.productions %}
+  <h3 >Productions</h3>
+  <div >
+    <dl >
+{% for p_slug in company.productions %}
+      <div >
+        <dt >{{ production_link(p_slug, productions)}}</dt>
+        <dd >
+        {{ productions[p_slug]['date'].strftime('%b %Y')}}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

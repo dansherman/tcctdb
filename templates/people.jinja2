@@ -1,0 +1,23 @@
+{% extends "layout.jinja2" %} 
+{% from 'links.jinja2' import person_link %}
+{% block title %}People{% endblock %} 
+{% block content %}
+<div >
+  <div >
+    <div >
+      <h2 >People
+      </h2>
+<div >
+    <dl >
+      {% for person in sorted_people %}
+      {% if person[0] != None %}
+      <div >
+        <dt >{{ person_link(person[0], people) }}</dt>
+        <dd >
+        </dd>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </dl>
+  </div> 
+{% endblock %}

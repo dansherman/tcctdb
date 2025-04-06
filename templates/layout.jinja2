@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css" />
+    {% block head %}
+    <title>{% block title %}{% endblock %} - TCCTDB</title>
+    {% endblock %}
+</head>
+
+<body>
+    <header id="site_title">
+        <div>
+            <a href="/" >TCCTDB</a>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        A project of 4 Community Theater
+    </footer>
+</body>

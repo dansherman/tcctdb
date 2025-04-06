@@ -1,0 +1,60 @@
+{% extends "layout.jinja2" %}
+  {% set cast = person.cast %}
+  {% set crew = person.crew %}
+  {% from 'links.jinja2' import production_link %}
+{% block title %}{{ person.nameFirst }} {{ person.nameLast }}{% endblock %}
+{% block content %}
+
+<div >
+  <div >
+    <div >
+      <h2 >{{ person.nameFirst }} {{ person.nameLast }}
+      </h2>   
+    </div>
+  </div>
+  {% if cast %}
+  <h3 >Cast</h3>
+  <div>
+    <dl class="roster">
+{% for row in cast %}
+  {% set p_slug = row[0] %}
+  {% set roles = row[1] %}
+      <div >
+        <dt >
+        {{ production_link(p_slug, productions)}}
+        </dt>
+        <dd >
+        {% for role in roles %}
+          {{role}}<br/>
+        {% endfor %}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+</div>
+{% endif %}
+{% if crew %}
+<div >
+  <h3>Crew</h3>
+  <div >
+    <dl class="roster">
+      {% for row in crew %}
+      {% set p_slug = row[0] %}
+      {% set jobs = row[1]%}
+      <div >
+        <dt >
+        {{ production_link(p_slug, productions)}}
+        </dt>
+        <dd >
+        {% for job in jobs %}
+          {{job}}<br/>
+        {% endfor %}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

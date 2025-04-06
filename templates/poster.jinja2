@@ -1,0 +1,30 @@
+{% macro poster(production) -%}
+<div class="poster"
+  >
+  {% if production.poster %}
+  <div >
+    <a href="/productions/{{production.slug}}">
+      <img src={{production.poster}}
+        alt="blurred background of poster for {{production.title}} by {{production.company}}"
+         />
+      <img src={{production.poster}} alt="poster for {{production.title}} by {{production.company}}"
+         />
+    </a>
+  </div>
+  {% else %}
+    <a href="/productions/{{production.slug}}">
+  <div>
+      <div class="company">
+        <p >{{production.company}}</p>
+      </div>
+      <div class="title">
+        <p >{{production.title}}</p>
+      </div>
+      <div class="date">
+        <p >{{production.date.strftime('%Y')}}</p>
+      </div>
+  </div>
+    </a>
+  {% endif %}
+</div>
+{%- endmacro %}
