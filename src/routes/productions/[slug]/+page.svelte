@@ -17,6 +17,9 @@
 		<img src={production.image} alt="Poster for {production.title}" style="max-width: 300px;" />
 	{/if}
 	<div>
+		<a href="/shows/{production.showSlug}">All productions of this show</a>
+	</div>
+	<div>
 		<CompanyLink slug={production.companySlug} company={companies[production.companySlug]} />
 		<DateStamp date={new Date(production.date)} />
 	</div>

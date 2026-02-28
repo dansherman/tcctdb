@@ -8,6 +8,11 @@
 	<div>
 		<a href="/">TCCTDB</a>
 	</div>
+	<nav>
+		<a href="/shows">Shows</a>
+		<a href="/people">People</a>
+		<a href="/companies">Companies</a>
+	</nav>
 </header>
 <main>
 	{@render children()}

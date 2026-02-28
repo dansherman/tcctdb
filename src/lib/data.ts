@@ -1,25 +1,33 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-// ---------- Public interfaces (unchanged from before) ----------
+// ---------- Public interfaces ----------
 
 export interface Person {
 	nameFirst: string;
 	nameLast: string;
 	image?: string;
-	cast: [string, string[]][]; // [production-slug, roles[]]
-	crew: [string, string[]][]; // [production-slug, jobs[]]
+	cast: [string, string[]][]; // [production-slug, character-names[]]
+	crew: [string, string[]][]; // [production-slug, crew-position-titles[]]
+}
+
+export interface Show {
+	title: string;
+	slug: string;
+	authors?: string;
+	description?: string;
 }
 
 export interface Production {
 	title: string;
+	showSlug: string;
 	company: string;
 	date: Date;
 	year: number;
 	slug: string;
 	companySlug: string;
 	image?: string;
-	cast: [string, string[]][]; // [role, person-slugs[]]
-	crew: [string, string[]][]; // [job, person-slugs[]]
+	cast: [string, string[]][]; // [character-name, person-slugs[]]
+	crew: [string, string[]][]; // [crew-position-title, person-slugs[]]
 }
 
 export interface Company {
@@ -27,180 +35,64 @@ export interface Company {
 	productions: string[]; // production slugs
 }
 
-export interface SiteData {
-	productions: Record<string, Production>;
-	people: Record<string, Person>;
-	companies: Record<string, Company>;
-	sortedProductions: Production[];
+// ---------- Helpers ----------
+
+/** Extract the display name from a role row (character name for cast, position title for crew) */
+function roleName(role: { role_type: string; characters: { name: string } | null; crew_positions: { title: string } | null }): string {
+	if (role.role_type === 'cast' && role.characters) return role.characters.name;
+	if (role.role_type === 'crew' && role.crew_positions) return role.crew_positions.title;
+	return '(unknown)';
 }
 
-// ---------- Supabase queries ----------
-
-export async function gatherData(supabase: SupabaseClient): Promise<SiteData> {
-	// Fetch all data in parallel
-	const [companiesRes, peopleRes, productionsRes, rolesRes] = await Promise.all([
-		supabase.from('companies').select('id, slug, name'),
-		supabase.from('people').select('id, slug, name_first, name_last, image_url'),
-		supabase
-			.from('productions')
-			.select('id, slug, title, company_id, opening_date, image_url, companies(slug, name)')
-			.order('opening_date', { ascending: false }),
-		supabase
-			.from('roles')
-			.select('production_id, person_id, role_name, role_type, sort_order, productions(slug), people(slug)')
-			.order('sort_order', { ascending: true })
-	]);
-
-	if (companiesRes.error) throw companiesRes.error;
-	if (peopleRes.error) throw peopleRes.error;
-	if (productionsRes.error) throw productionsRes.error;
-	if (rolesRes.error) throw rolesRes.error;
-
-	// Build lookup maps by id
-	const companyById = new Map<string, { slug: string; name: string }>();
-	const companies: Record<string, Company> = {};
-	for (const c of companiesRes.data) {
-		companyById.set(c.id, { slug: c.slug, name: c.name });
-		companies[c.slug] = { name: c.name, productions: [] };
-	}
-
-	const personById = new Map<string, string>(); // id → slug
-	const people: Record<string, Person> = {};
-	for (const p of peopleRes.data) {
-		personById.set(p.id, p.slug);
-		people[p.slug] = {
-			nameFirst: p.name_first,
-			nameLast: p.name_last,
-			image: p.image_url || undefined,
-			cast: [],
-			crew: []
-		};
-	}
-
-	const productionById = new Map<string, string>(); // id → slug
-	const productions: Record<string, Production> = {};
-	for (const p of productionsRes.data) {
-		productionById.set(p.id, p.slug);
-		const company = p.companies as unknown as { slug: string; name: string };
-		const date = new Date(p.opening_date);
-
-		productions[p.slug] = {
-			title: p.title,
-			company: company.name,
-			date,
-			year: date.getFullYear(),
-			slug: p.slug,
-			companySlug: company.slug,
-			image: p.image_url || undefined,
-			cast: [],
-			crew: []
-		};
-
-		// Register production under its company
-		if (companies[company.slug]) {
-			companies[company.slug].productions.push(p.slug);
-		}
-	}
-
-	// Process roles into the production and person data structures
-	// Group by production + role_type, maintaining order
-	const prodRoleGroups = new Map<string, Map<string, string[]>>(); // prodSlug → Map<roleName, personSlugs[]>
-	const prodCrewGroups = new Map<string, Map<string, string[]>>();
-	const personCastMap = new Map<string, Map<string, string[]>>(); // personSlug → Map<prodSlug, roles[]>
-	const personCrewMap = new Map<string, Map<string, string[]>>();
-
-	for (const role of rolesRes.data) {
-		const prodSlug = (role.productions as unknown as { slug: string }).slug;
-		const personSlug = (role.people as unknown as { slug: string }).slug;
-
-		if (role.role_type === 'cast') {
-			// Production side: group person slugs by role name
-			if (!prodRoleGroups.has(prodSlug)) prodRoleGroups.set(prodSlug, new Map());
-			const roleMap = prodRoleGroups.get(prodSlug)!;
-			if (!roleMap.has(role.role_name)) roleMap.set(role.role_name, []);
-			roleMap.get(role.role_name)!.push(personSlug);
-
-			// Person side: group roles by production slug
-			if (!personCastMap.has(personSlug)) personCastMap.set(personSlug, new Map());
-			const castMap = personCastMap.get(personSlug)!;
-			if (!castMap.has(prodSlug)) castMap.set(prodSlug, []);
-			castMap.get(prodSlug)!.push(role.role_name);
-		} else {
-			if (!prodCrewGroups.has(prodSlug)) prodCrewGroups.set(prodSlug, new Map());
-			const crewMap = prodCrewGroups.get(prodSlug)!;
-			if (!crewMap.has(role.role_name)) crewMap.set(role.role_name, []);
-			crewMap.get(role.role_name)!.push(personSlug);
-
-			if (!personCrewMap.has(personSlug)) personCrewMap.set(personSlug, new Map());
-			const jobMap = personCrewMap.get(personSlug)!;
-			if (!jobMap.has(prodSlug)) jobMap.set(prodSlug, []);
-			jobMap.get(prodSlug)!.push(role.role_name);
-		}
-	}
-
-	// Apply grouped roles to production objects
-	for (const [prodSlug, roleMap] of prodRoleGroups) {
-		if (productions[prodSlug]) {
-			productions[prodSlug].cast = Array.from(roleMap.entries());
-		}
-	}
-	for (const [prodSlug, crewMap] of prodCrewGroups) {
-		if (productions[prodSlug]) {
-			productions[prodSlug].crew = Array.from(crewMap.entries());
-		}
-	}
-
-	// Apply grouped roles to person objects
-	for (const [personSlug, castMap] of personCastMap) {
-		if (people[personSlug]) {
-			people[personSlug].cast = Array.from(castMap.entries());
-		}
-	}
-	for (const [personSlug, jobMap] of personCrewMap) {
-		if (people[personSlug]) {
-			people[personSlug].crew = Array.from(jobMap.entries());
-		}
-	}
-
-	const sortedProductions = Object.values(productions).sort(
-		(a, b) => b.date.getTime() - a.date.getTime()
-	);
-
-	return { productions, people, companies, sortedProductions };
+/** Build a Production object from a Supabase row that includes shows(...) and companies(...) */
+function toProduction(p: {
+	slug: string;
+	opening_date: string;
+	image_url: string | null;
+	shows: { slug: string; title: string };
+	companies: { slug: string; name: string };
+}): Production {
+	const date = new Date(p.opening_date);
+	return {
+		title: p.shows.title,
+		showSlug: p.shows.slug,
+		company: p.companies.name,
+		date,
+		year: date.getFullYear(),
+		slug: p.slug,
+		companySlug: p.companies.slug,
+		image: p.image_url || undefined,
+		cast: [],
+		crew: []
+	};
 }
 
-// ---------- Focused queries (avoid loading everything for single-entity pages) ----------
+// ---------- Focused queries ----------
 
 export async function getProduction(supabase: SupabaseClient, slug: string) {
 	const { data: prod, error: prodErr } = await supabase
 		.from('productions')
-		.select('id, slug, title, opening_date, image_url, companies(slug, name)')
+		.select('id, slug, opening_date, image_url, shows(slug, title), companies(slug, name)')
 		.eq('slug', slug)
 		.single();
 
 	if (prodErr || !prod) return null;
 
-	const company = prod.companies as unknown as { slug: string; name: string };
-
 	const { data: roles, error: rolesErr } = await supabase
 		.from('roles')
-		.select('role_name, role_type, sort_order, people(slug, name_first, name_last, image_url)')
+		.select('role_type, sort_order, characters(name), crew_positions(title), people(slug, name_first, name_last, image_url)')
 		.eq('production_id', prod.id)
 		.order('sort_order', { ascending: true });
 
 	if (rolesErr) throw rolesErr;
 
-	// Build people map and cast/crew arrays
 	const people: Record<string, Person> = {};
 	const castGroups = new Map<string, string[]>();
 	const crewGroups = new Map<string, string[]>();
 
 	for (const role of roles ?? []) {
 		const person = role.people as unknown as {
-			slug: string;
-			name_first: string;
-			name_last: string;
-			image_url: string | null;
+			slug: string; name_first: string; name_last: string; image_url: string | null;
 		};
 
 		if (!people[person.slug]) {
@@ -213,19 +105,17 @@ export async function getProduction(supabase: SupabaseClient, slug: string) {
 			};
 		}
 
+		const name = roleName(role as any);
 		const groups = role.role_type === 'cast' ? castGroups : crewGroups;
-		if (!groups.has(role.role_name)) groups.set(role.role_name, []);
-		groups.get(role.role_name)!.push(person.slug);
+		if (!groups.has(name)) groups.set(name, []);
+		groups.get(name)!.push(person.slug);
 	}
 
+	const show = prod.shows as unknown as { slug: string; title: string };
+	const company = prod.companies as unknown as { slug: string; name: string };
+
 	const production: Production = {
-		title: prod.title,
-		company: company.name,
-		date: new Date(prod.opening_date),
-		year: new Date(prod.opening_date).getFullYear(),
-		slug: prod.slug,
-		companySlug: company.slug,
-		image: prod.image_url || undefined,
+		...toProduction({ ...prod, shows: show, companies: company }),
 		cast: Array.from(castGroups.entries()),
 		crew: Array.from(crewGroups.entries())
 	};
@@ -248,43 +138,31 @@ export async function getPerson(supabase: SupabaseClient, slug: string) {
 
 	const { data: roles, error: rolesErr } = await supabase
 		.from('roles')
-		.select('role_name, role_type, productions(slug, title, opening_date, image_url, companies(slug, name))')
+		.select('role_type, characters(name), crew_positions(title), productions(slug, opening_date, image_url, shows(slug, title), companies(slug, name))')
 		.eq('person_id', person.id)
 		.order('sort_order', { ascending: true });
 
 	if (rolesErr) throw rolesErr;
 
-	// Group roles by production
 	const castMap = new Map<string, string[]>();
 	const crewMap = new Map<string, string[]>();
 	const productions: Record<string, Production> = {};
 
 	for (const role of roles ?? []) {
 		const prod = role.productions as unknown as {
-			slug: string;
-			title: string;
-			opening_date: string;
-			image_url: string | null;
+			slug: string; opening_date: string; image_url: string | null;
+			shows: { slug: string; title: string };
 			companies: { slug: string; name: string };
 		};
 
 		if (!productions[prod.slug]) {
-			productions[prod.slug] = {
-				title: prod.title,
-				company: prod.companies.name,
-				date: new Date(prod.opening_date),
-				year: new Date(prod.opening_date).getFullYear(),
-				slug: prod.slug,
-				companySlug: prod.companies.slug,
-				image: prod.image_url || undefined,
-				cast: [],
-				crew: []
-			};
+			productions[prod.slug] = toProduction(prod);
 		}
 
+		const name = roleName(role as any);
 		const map = role.role_type === 'cast' ? castMap : crewMap;
 		if (!map.has(prod.slug)) map.set(prod.slug, []);
-		map.get(prod.slug)!.push(role.role_name);
+		map.get(prod.slug)!.push(name);
 	}
 
 	const personData: Person = {
@@ -309,7 +187,7 @@ export async function getCompany(supabase: SupabaseClient, slug: string) {
 
 	const { data: prods, error: prodsErr } = await supabase
 		.from('productions')
-		.select('slug, title, opening_date, image_url')
+		.select('slug, opening_date, image_url, shows(slug, title)')
 		.eq('company_id', company.id)
 		.order('opening_date', { ascending: false });
 
@@ -317,17 +195,12 @@ export async function getCompany(supabase: SupabaseClient, slug: string) {
 
 	const productions: Record<string, Production> = {};
 	for (const p of prods ?? []) {
-		productions[p.slug] = {
-			title: p.title,
-			company: company.name,
-			date: new Date(p.opening_date),
-			year: new Date(p.opening_date).getFullYear(),
-			slug: p.slug,
-			companySlug: company.slug,
-			image: p.image_url || undefined,
-			cast: [],
-			crew: []
-		};
+		const show = p.shows as unknown as { slug: string; title: string };
+		productions[p.slug] = toProduction({
+			...p,
+			shows: show,
+			companies: { slug: company.slug, name: company.name }
+		});
 	}
 
 	const companyData: Company = {
@@ -378,7 +251,7 @@ export async function getAllCompanies(supabase: SupabaseClient) {
 export async function getAllProductions(supabase: SupabaseClient) {
 	const { data, error } = await supabase
 		.from('productions')
-		.select('slug, title, opening_date, image_url, companies(slug, name)')
+		.select('slug, opening_date, image_url, shows(slug, title), companies(slug, name)')
 		.order('opening_date', { ascending: false });
 
 	if (error) throw error;
@@ -387,18 +260,10 @@ export async function getAllProductions(supabase: SupabaseClient) {
 	const companies: Record<string, Company> = {};
 
 	for (const p of data ?? []) {
+		const show = p.shows as unknown as { slug: string; title: string };
 		const company = p.companies as unknown as { slug: string; name: string };
-		productions.push({
-			title: p.title,
-			company: company.name,
-			date: new Date(p.opening_date),
-			year: new Date(p.opening_date).getFullYear(),
-			slug: p.slug,
-			companySlug: company.slug,
-			image: p.image_url || undefined,
-			cast: [],
-			crew: []
-		});
+
+		productions.push(toProduction({ ...p, shows: show, companies: company }));
 
 		if (!companies[company.slug]) {
 			companies[company.slug] = { name: company.name, productions: [] };
@@ -407,4 +272,73 @@ export async function getAllProductions(supabase: SupabaseClient) {
 	}
 
 	return { productions, companies };
+}
+
+// ---------- Show queries ----------
+
+export async function getAllShows(supabase: SupabaseClient) {
+	const { data, error } = await supabase
+		.from('shows')
+		.select('slug, title, authors, description')
+		.order('title', { ascending: true });
+
+	if (error) throw error;
+
+	return (data ?? []).map((s): Show => ({
+		title: s.title,
+		slug: s.slug,
+		authors: s.authors || undefined,
+		description: s.description || undefined
+	}));
+}
+
+export async function getShow(supabase: SupabaseClient, slug: string) {
+	const { data: show, error: showErr } = await supabase
+		.from('shows')
+		.select('id, slug, title, authors, description')
+		.eq('slug', slug)
+		.single();
+
+	if (showErr || !show) return null;
+
+	// Get all characters for this show
+	const { data: chars, error: charErr } = await supabase
+		.from('characters')
+		.select('id, name, description, sort_order')
+		.eq('show_id', show.id)
+		.order('sort_order', { ascending: true });
+
+	if (charErr) throw charErr;
+
+	// Get all productions of this show
+	const { data: prods, error: prodsErr } = await supabase
+		.from('productions')
+		.select('slug, opening_date, image_url, companies(slug, name)')
+		.eq('show_id', show.id)
+		.order('opening_date', { ascending: false });
+
+	if (prodsErr) throw prodsErr;
+
+	const productions: Production[] = (prods ?? []).map((p) => {
+		const company = p.companies as unknown as { slug: string; name: string };
+		return toProduction({
+			...p,
+			shows: { slug: show.slug, title: show.title },
+			companies: company
+		});
+	});
+
+	const characters = (chars ?? []).map((c) => ({
+		name: c.name,
+		description: c.description || undefined
+	}));
+
+	const showData: Show = {
+		title: show.title,
+		slug: show.slug,
+		authors: show.authors || undefined,
+		description: show.description || undefined
+	};
+
+	return { show: showData, characters, productions };
 }
