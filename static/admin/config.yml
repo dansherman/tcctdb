@@ -1,0 +1,53 @@
+backend:
+  name: github
+  repo: dansherman/tcctdb  # Update this to your GitHub repo
+  branch: main
+  open_authoring: true  # Allows non-collaborators to submit via fork + PR
+
+publish_mode: editorial_workflow  # Enables draft → review → publish with PR-based moderation
+
+media_folder: static/images
+public_folder: /images
+
+collections:
+  - name: productions
+    label: Productions
+    folder: data/productions
+    format: yaml
+    create: true
+    slug: "{{companySlug}}-{{slug}}"
+    identifier_field: title
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Company, name: company, widget: string }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Image, name: image, widget: image, required: false, media_folder: "/static/images/productions", public_folder: "/images/productions" }
+      - label: Cast
+        name: cast
+        widget: list
+        required: false
+        fields:
+          - { label: Role, name: role, widget: string }
+          - { label: Person (slug), name: person, widget: string, hint: "Use the person's slug, e.g. jane-doe" }
+      - label: Crew
+        name: crew
+        widget: list
+        required: false
+        fields:
+          - { label: Job, name: job, widget: string }
+          - { label: Person (slug), name: person, widget: string, hint: "Use the person's slug, e.g. jane-doe" }
+
+  - name: people
+    label: People
+    file: data/people.yaml
+    format: yaml
+    fields:
+      - label: People
+        name: people
+        widget: list
+        identifier_field: slug
+        fields:
+          - { label: Slug, name: slug, widget: string, hint: "firstname-lastname, e.g. jane-doe" }
+          - { label: First Name, name: nameFirst, widget: string }
+          - { label: Last Name, name: nameLast, widget: string }
+          - { label: Photo, name: image, widget: image, required: false, media_folder: "/static/images/people", public_folder: "/images/people" }
