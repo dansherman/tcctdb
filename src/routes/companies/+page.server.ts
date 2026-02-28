@@ -1,9 +1,9 @@
-import { gatherData } from '$lib/data';
+import { getAllCompanies } from '$lib/data';
+import { getSupabase } from '$lib/supabase';
 import type { PageServerLoad } from './$types';
 
-export const prerender = true;
-
-export const load: PageServerLoad = () => {
-	const { companies } = gatherData();
+export const load: PageServerLoad = async () => {
+	const supabase = getSupabase();
+	const companies = await getAllCompanies(supabase);
 	return { companies };
 };

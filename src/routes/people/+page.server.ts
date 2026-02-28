@@ -1,12 +1,11 @@
-import { gatherData } from '$lib/data';
+import { getAllPeople } from '$lib/data';
+import { getSupabase } from '$lib/supabase';
 import type { PageServerLoad } from './$types';
 
-export const prerender = true;
-
-export const load: PageServerLoad = () => {
-	const { people } = gatherData();
-	const sortedPeople = Object.entries(people).sort((a, b) =>
-		a[1].nameLast.localeCompare(b[1].nameLast)
-	);
+export const load: PageServerLoad = async () => {
+	const supabase = getSupabase();
+	const people = await getAllPeople(supabase);
+	// Already sorted by name_last from the query
+	const sortedPeople = Object.entries(people);
 	return { sortedPeople, people };
 };

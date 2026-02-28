@@ -1,14 +1,13 @@
-import { gatherData } from '$lib/data';
+import { getPerson } from '$lib/data';
+import { getSupabase } from '$lib/supabase';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const prerender = true;
+export const load: PageServerLoad = async ({ params }) => {
+	const supabase = getSupabase();
+	const result = await getPerson(supabase, params.slug);
 
-export const load: PageServerLoad = ({ params }) => {
-	const { people, productions } = gatherData();
-	const person = people[params.slug];
+	if (!result) throw error(404, 'Person not found');
 
-	if (!person) throw error(404, 'Person not found');
-
-	return { person, productions, slug: params.slug };
+	return result;
 };

@@ -1,14 +1,13 @@
-import { gatherData } from '$lib/data';
+import { getProduction } from '$lib/data';
+import { getSupabase } from '$lib/supabase';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const prerender = true;
+export const load: PageServerLoad = async ({ params }) => {
+	const supabase = getSupabase();
+	const result = await getProduction(supabase, params.slug);
 
-export const load: PageServerLoad = ({ params }) => {
-	const { productions, people, companies } = gatherData();
-	const production = productions[params.slug];
+	if (!result) throw error(404, 'Production not found');
 
-	if (!production) throw error(404, 'Production not found');
-
-	return { production, people, companies };
+	return result;
 };

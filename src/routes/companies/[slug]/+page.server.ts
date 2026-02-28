@@ -1,14 +1,13 @@
-import { gatherData } from '$lib/data';
+import { getCompany } from '$lib/data';
+import { getSupabase } from '$lib/supabase';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const prerender = true;
+export const load: PageServerLoad = async ({ params }) => {
+	const supabase = getSupabase();
+	const result = await getCompany(supabase, params.slug);
 
-export const load: PageServerLoad = ({ params }) => {
-	const { companies, productions } = gatherData();
-	const company = companies[params.slug];
+	if (!result) throw error(404, 'Company not found');
 
-	if (!company) throw error(404, 'Company not found');
-
-	return { company, productions };
+	return result;
 };
